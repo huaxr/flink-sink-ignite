@@ -46,7 +46,7 @@
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka-0.10_2.11</artifactId>
 			<version>${project.version}</version>
-<!--			<scope>provided</scope>-->
+<!--			<scope>provided</scope> 表示环境已经提供了 但是connection在环境并没有提供-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
@@ -62,7 +62,7 @@
 					<artifactId>metrics-core</artifactId>
 				</exclusion>
 			</exclusions>
-			      <scope>provided</scope>
+<!--			      <scope>provided</scope>-->
 		</dependency>
 	</dependencies>
 
