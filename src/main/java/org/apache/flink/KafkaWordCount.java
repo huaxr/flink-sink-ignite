@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 public class KafkaWordCount {
 
-	private final String kafkaClusterName = "kafka_pandora";
+	private final String kafkaClusterName = "kafka_system_security_lf";
 
 	private final String kafkaConsumerGroup = "hxr_test";
 
@@ -93,9 +93,9 @@ public class KafkaWordCount {
 		properties.put(ConsumerConfig.CLUSTER_NAME_CONFIG, kafkaClusterName);
 		properties.put(ConsumerConfig.TOPIC_NAME_CONFIG, topic);
 		properties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
-		properties.put(ConsumerConfig.PSM_CONFIG, "a.b.c");
+		properties.put(ConsumerConfig.PSM_CONFIG, "security.center.flink_tran_sink");
 		properties.put(ConsumerConfig.TEAM_CONFIG, "team1");
-		properties.put(ConsumerConfig.OWNER_CONFIG, "***");
+		properties.put(ConsumerConfig.OWNER_CONFIG, "bytedance");
 		return properties;
 	}
 
@@ -107,9 +107,9 @@ public class KafkaWordCount {
 	public static Properties createKafkaProducerConfig(String kafkaClusterName) {
 		Properties properties = new Properties();
 		properties.put(ConsumerConfig.CLUSTER_NAME_CONFIG, kafkaClusterName);
-		properties.put(ConsumerConfig.PSM_CONFIG, "a.b.c");
-		properties.put(ConsumerConfig.TEAM_CONFIG, "team1");
-		properties.put(ConsumerConfig.OWNER_CONFIG, "***");
+		properties.put(ConsumerConfig.PSM_CONFIG, "security.center.flink_tran_sink");
+		properties.put(ConsumerConfig.TEAM_CONFIG, "bytedance");
+		properties.put(ConsumerConfig.OWNER_CONFIG, "huaxinrui");
 		return properties;
 	}
 
