@@ -1,7 +1,7 @@
 #!/bin/bash
-set -ex
+#set -ex
 
 mkdir -p output
-mvn clean package
-cp target/flink-byted-quickstart-java-1.9-byted-SNAPSHOT.jar output
-cp script/* output
+#mvn clean package
+mvn clean package -U -Pbuild-jar
+cp target/flink-byted-quickstart-java-1.9-byted-SNAPSHOT.jar output/
