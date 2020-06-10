@@ -31,6 +31,7 @@ public class App {
 		env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
 		env.getCheckpointConfig().setCheckpointTimeout(60000);
 		env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+		env.setMaxParallelism(1).setParallelism(1);
 		return env;
 	}
 	public static FlinkKafkaConsumer010<String> getSource() {
