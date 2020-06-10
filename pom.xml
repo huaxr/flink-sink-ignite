@@ -89,6 +89,10 @@
 					<artifactId>curator-framework</artifactId>
 					<groupId>org.apache.curator</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>curator-x-discovery</artifactId>
+					<groupId>org.apache.curator</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
