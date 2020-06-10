@@ -84,6 +84,12 @@
 			<groupId>org.apache.ignite</groupId>
 			<artifactId>ignite-zookeeper</artifactId>
 			<version>${ignite.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>curator-framework</artifactId>
+					<groupId>org.apache.curator</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ignite</groupId>
