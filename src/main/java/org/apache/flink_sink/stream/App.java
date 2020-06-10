@@ -54,7 +54,7 @@ public class App {
 		if (OS.startsWith("mac")) {
 			appStream = env.socketTextStream("localhost", 9999);
 		} else {
-			appStream = env.addSource(kafkaSource).setParallelism(10).name("kafka_source");
+			appStream = env.addSource(kafkaSource).name("kafka_source");
 		}
 		DataStream<Map<String,Object>> out = appStream.map(new Transaction.Mapper2());
 		out.print();
