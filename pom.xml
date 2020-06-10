@@ -93,6 +93,14 @@
 					<artifactId>curator-x-discovery</artifactId>
 					<groupId>org.apache.curator</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>curator-client</artifactId>
+					<groupId>org.apache.curator</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>curator-recipes</artifactId>
+					<groupId>org.apache.curator</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
