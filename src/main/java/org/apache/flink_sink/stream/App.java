@@ -19,7 +19,8 @@ public class App {
 
 	public static StreamExecutionEnvironment getEnv() {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-		if (OS == "mac os x") {
+		if (OS.startsWith("mac")) {
+			System.out.println("local env");
 			env.setMaxParallelism(1).setParallelism(1);
 			return env;
 		}
@@ -49,7 +50,7 @@ public class App {
 		StreamExecutionEnvironment env = getEnv();
 		FlinkKafkaConsumer010<String> kafkaSource = getSource();
 		DataStream<String> appStream;
-		if (OS == "mac os x") {
+		if (OS.startsWith("mac")) {
 			appStream = env.socketTextStream("localhost", 9999);
 		} else {
 			appStream = env.addSource(kafkaSource).setParallelism(10).name("kafka_source");
