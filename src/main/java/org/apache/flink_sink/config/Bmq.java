@@ -14,6 +14,7 @@ public class Bmq {
         Bmq bmq = new Bmq();
         Class bmqClass = bmq.getClass();
         Config conf = (Config) bmqClass.getAnnotation(Config.class);
+        System.out.println("配置加载:" +conf.BmqClusterName);
         properties.put(ConsumerConfig.CLUSTER_NAME_CONFIG, conf.BmqClusterName);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, conf.BmqConsumerGroup);
         properties.put(ConsumerConfig.TOPIC_NAME_CONFIG, conf.BmqSourceTopic);

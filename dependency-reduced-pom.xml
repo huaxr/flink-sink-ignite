@@ -44,7 +44,7 @@
               </filters>
               <transformers>
                 <transformer>
-                  <mainClass>org.apache.flink_sink.KafkaWordCount</mainClass>
+                  <mainClass>org.apache.flink_sink.stream.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>

@@ -15,8 +15,14 @@ import java.util.Properties;
 
 public class App {
 
+	private static String OS = System.getProperty("os.name").toLowerCase();
+
 	public static StreamExecutionEnvironment getEnv() {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+		if (OS == "mac os x") {
+			env.setMaxParallelism(1).setParallelism(1);
+			return env;
+		}
 		//checkpoint配置
 		//为了能够使用支持容错的kafka Consumer，开启checkpoint机制，支持容错，保存某个状态信息
 		env.enableCheckpointing(5000);
@@ -24,7 +30,6 @@ public class App {
 		env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
 		env.getCheckpointConfig().setCheckpointTimeout(60000);
 		env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-		env.setMaxParallelism(1).setParallelism(1);
 		return env;
 	}
 	public static FlinkKafkaConsumer010<String> getSource() {
@@ -43,9 +48,13 @@ public class App {
 	public static void main(String[] args) {
 		StreamExecutionEnvironment env = getEnv();
 		FlinkKafkaConsumer010<String> kafkaSource = getSource();
-		DataStream<String> appStream = env.addSource(kafkaSource).setParallelism(10).name("kafka_source");
-//		DataStream<String> appStream = env.socketTextStream("localhost", 9999);
-		DataStream<Map<String,String>> out = appStream.flatMap(new Transaction.Splitter()).map(new Transaction.Mapper2());
+		DataStream<String> appStream;
+		if (OS == "mac os x") {
+			appStream = env.socketTextStream("localhost", 9999);
+		} else {
+			appStream = env.addSource(kafkaSource).setParallelism(10).name("kafka_source");
+		}
+		DataStream<Map<String,Object>> out = appStream.map(new Transaction.Mapper2());
 		out.print();
 
 		IgniteSink igniteSink = getSink();
