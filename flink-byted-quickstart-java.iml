@@ -45,7 +45,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-shaded-netty:4.1.32.Final-8.0-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-shaded-jackson:2.9.8-8.0-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-shaded-zookeeper-3:3.4.10-8.0-byted-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-cli:commons-cli:1.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.javassist:javassist:3.19.0-GA" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.12" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.typesafe.akka:akka-actor_2.11:2.5.21" level="project" />
@@ -62,8 +61,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.twitter:chill_2.11:0.7.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.twitter:chill-java:0.7.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.data-artisans:frocksdbjni:5.17.2-artisans-1.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-clients_2.11:1.9-byted-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-optimizer_2.11:1.9-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-shaded-guava:18.0-8.0-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.sling:org.apache.sling.commons.json:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
@@ -77,6 +74,9 @@
     <orderEntry type="library" name="Maven: com.bytedance:commons:0.0.8" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.13.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-clients_2.11:1.9-byted-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.flink:flink-optimizer_2.11:1.9-byted-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-cli:commons-cli:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka-0.10_2.11:1.9-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka-0.9_2.11:1.9-byted-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.flink:flink-connector-kafka-base_2.11:1.9-byted-SNAPSHOT" level="project" />
