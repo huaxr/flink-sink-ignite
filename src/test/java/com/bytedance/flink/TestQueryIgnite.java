@@ -11,7 +11,6 @@ public class TestQueryIgnite {
         Ignite ignite = Ignition.start("loc_ignite.xml");
         IgniteCache<String, String> cache =  ignite.getOrCreateCache("HIDS_SOAR");
         cache.iterator().forEachRemaining(System.out::println);
-        System.out.println(cache.get("AAAAAAAAAAAAAA"));
     }
 }
 
