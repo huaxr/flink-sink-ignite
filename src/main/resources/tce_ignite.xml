@@ -27,10 +27,10 @@
     -->
     <bean id="grid.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <property name="igniteInstanceName" value="Ignite_1.0"/>
-        <property name="clientMode" value="false"/>
+        <property name="clientMode" value="true"/>
         <property name="discoverySpi">
             <bean class="org.apache.ignite.spi.discovery.zk.ZookeeperDiscoverySpi">
-                <property name="zkConnectionString" value="10.224.31.148:2181"/>
+                <property name="zkConnectionString" value="10.224.174.155:2181,10.224.179.150:2181,10.224.181.135:2181,10.224.185.154:2181,10.224.190.155:2181"/>
                 <property name="sessionTimeout" value="100000"/>
                 <property name="zkRootPath" value="/apacheIgnite"/>
                 <property name="joinTimeout" value="100000"/>

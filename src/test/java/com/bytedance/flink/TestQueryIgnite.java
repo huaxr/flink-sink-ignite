@@ -8,9 +8,10 @@ import org.junit.Test;
 public class TestQueryIgnite {
     @Test
     public void testCase() throws Exception {
-        Ignite ignite = Ignition.start("default-config.xml");
+        Ignite ignite = Ignition.start("loc_ignite.xml");
         IgniteCache<String, String> cache =  ignite.getOrCreateCache("HIDS_SOAR");
         cache.iterator().forEachRemaining(System.out::println);
+        System.out.println(cache.get("AAAAAAAAAAAAAA"));
     }
 }
 

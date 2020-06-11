@@ -3,18 +3,21 @@ package org.apache.flink_sink.sink;
 import java.util.Map;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+import org.apache.flink_sink.utils.Env;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteDataStreamer;
 import org.apache.ignite.IgniteException;
 import org.apache.ignite.IgniteIllegalStateException;
 import org.apache.ignite.IgniteLogger;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.util.typedef.internal.A;
+import org.apache.ignite.spi.discovery.zk.ZookeeperDiscoverySpi;
 
 /**
  * Apache Flink Ignite sink implemented as a RichSinkFunction.
  */
-public class IgniteSink<IN> extends RichSinkFunction<IN> {
+public class IgniteSinker<IN> extends RichSinkFunction<IN> {
     /** Default flush frequency. */
     private static final long DFLT_FLUSH_FREQ = 10000L;
 
@@ -110,7 +113,7 @@ public class IgniteSink<IN> extends RichSinkFunction<IN> {
      *
      * @param cacheName Cache name.
      */
-    public IgniteSink(String cacheName, String igniteCfgFile) {
+    public IgniteSinker(String cacheName, String igniteCfgFile) {
         this.cacheName = cacheName;
         this.igniteCfgFile = igniteCfgFile;
     }
@@ -129,7 +132,24 @@ public class IgniteSink<IN> extends RichSinkFunction<IN> {
             // if an ignite instance is already started in same JVM then use it.
             this.ignite = Ignition.ignite();
         } catch (IgniteIllegalStateException e) {
-            this.ignite = Ignition.start(igniteCfgFile);
+            // this.ignite = Ignition.start(igniteCfgFile);
+            System.out.println("JVM 尝试启动多client, Ignite发生异常:" + e.toString());
+            System.out.println("正在使用 getOrStart 避免冲突");
+            IgniteConfiguration obj = new IgniteConfiguration();
+            obj.setClientMode(true);
+            ZookeeperDiscoverySpi spi = new ZookeeperDiscoverySpi();
+            String clusterIps;
+            if (Env.isLocal()) {
+                clusterIps = "10.224.31.148:2181";
+            } else {
+                clusterIps = "10.224.174.155:2181,10.224.179.150:2181,10.224.181.135:2181,10.224.185.154:2181,10.224.190.155:2181";
+            }
+            spi.setZkConnectionString(clusterIps);
+            spi.setZkRootPath("/apacheIgnite");
+            spi.setJoinTimeout(100000);
+            spi.setSessionTimeout(100000);
+            obj.setDiscoverySpi(spi);
+            this.ignite = Ignition.getOrStart(obj);
         }
 
         this.ignite.getOrCreateCache(cacheName);

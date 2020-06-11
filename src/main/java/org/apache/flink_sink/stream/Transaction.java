@@ -2,16 +2,20 @@ package org.apache.flink_sink.stream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typesafe.config.ConfigException;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Transaction {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // 数据的Transformations可以将一个或多个DataStream转换为一个新的DataStream。程序可以将多种Transformations组合成复杂的拓扑结构。
@@ -48,8 +52,13 @@ public class Transaction {
     public static class Mapper2 implements MapFunction<String, Map<String,Object>> {
         @Override
         public Map<String,Object> map(String value) throws Exception {
-            Map<String, Object> data = mapper.readValue(value, new TypeReference<Map<String, Object>>(){});
-            return data;
+            try {
+                Map<String, Object> data = mapper.readValue(value, new TypeReference<Map<String, Object>>(){});
+                return data;
+            } catch (Exception e){
+                LOGGER.error("[*] transaction序列化错误");
+                return null;
+            }
         }
     }
 }
