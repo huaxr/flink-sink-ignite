@@ -1,23 +1,26 @@
 package org.apache.flink_sink.stream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typesafe.config.ConfigException;
+import com.sun.codemodel.internal.JCase;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
+import org.apache.flink_sink.model.Event;
+import org.apache.flink_sink.model.LoginEvent;
+import org.apache.flink_sink.model.ScanEvent;
+import org.apache.flink_sink.model.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Transaction {
     private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-
     // 数据的Transformations可以将一个或多个DataStream转换为一个新的DataStream。程序可以将多种Transformations组合成复杂的拓扑结构。
     // flatMap 读入一个元素，返回转换后的0个、1个或者多个元素
     // keyBy 逻辑上将流分区为不相交的分区，每个分区包含相同key的元素。
@@ -49,14 +52,33 @@ public class Transaction {
         }
     }
 
-    public static class Mapper2 implements MapFunction<String, Map<String,Object>> {
+    public static class Mapper2 implements MapFunction<String, Event> {
         @Override
-        public Map<String,Object> map(String value) throws Exception {
+        public Event map(String value) throws Exception {
             try {
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 Map<String, Object> data = mapper.readValue(value, new TypeReference<Map<String, Object>>(){});
-                return data;
+                String alarmType = data.getOrDefault("type", "").toString();
+
+                Event raw = null;
+
+                if (alarmType.equals("login")) {
+                    raw = mapper.readValue(value, LoginEvent.class);
+                }
+                else if (alarmType.equals("scan")) {
+                    raw = mapper.readValue(value, ScanEvent.class);
+                }
+
+                else if (alarmType.equals("window")) {
+                    raw = mapper.readValue(value, WindowEvent.class);
+                }
+
+                String cache = raw.getCacheName();
+                System.out.println("获取type:"+ alarmType);
+                System.out.println("获取cache:"+ cache);
+                return raw;
             } catch (Exception e){
-                LOGGER.error("[*] transaction序列化错误");
+                LOGGER.error("[*] transaction序列化错误", e);
                 return null;
             }
         }

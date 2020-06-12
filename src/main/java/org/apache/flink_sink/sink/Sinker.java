@@ -1,10 +1,8 @@
 package org.apache.flink_sink.sink;
 
-import java.util.*;
-
+import java.util.Map;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-import org.apache.flink_sink.model.Event;
 import org.apache.flink_sink.utils.Env;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteDataStreamer;
@@ -19,11 +17,8 @@ import org.apache.ignite.spi.discovery.zk.ZookeeperDiscoverySpi;
 /**
  * Apache Flink Ignite sink implemented as a RichSinkFunction.
  */
-public class IgniteSinker extends RichSinkFunction<Event> {
+public class Sinker<IN> extends RichSinkFunction<IN> {
     /** Default flush frequency. */
-    // 定义全局 stream map 缓存
-    protected transient Map<String, IgniteDataStreamer> load;
-
     private static final long DFLT_FLUSH_FREQ = 10000L;
 
     /** Logger. */
@@ -42,22 +37,22 @@ public class IgniteSinker extends RichSinkFunction<Event> {
     protected transient Ignite ignite;
 
     /** Ignite Data streamer instance. */
-//    protected transient IgniteDataStreamer streamer;
+    protected transient IgniteDataStreamer streamer;
 
     /** Ignite grid configuration file. */
     protected final String igniteCfgFile;
 
     /** Cache name. */
-//    protected final String cacheName;
+    protected final String cacheName;
 
     /**
      * Gets the cache name.
      *
      * @return Cache name.
      */
-//    public String getCacheName() {
-//        return cacheName;
-//    }
+    public String getCacheName() {
+        return cacheName;
+    }
 
     /**
      * Gets Ignite configuration file.
@@ -113,8 +108,13 @@ public class IgniteSinker extends RichSinkFunction<Event> {
         this.allowOverwrite = allowOverwrite;
     }
 
-    // 自定义的 无需传入cacheName参数
-    public IgniteSinker(String igniteCfgFile) {
+    /**
+     * Default IgniteSink constructor.
+     *
+     * @param cacheName Cache name.
+     */
+    public Sinker(String cacheName, String igniteCfgFile) {
+        this.cacheName = cacheName;
         this.igniteCfgFile = igniteCfgFile;
     }
 
@@ -125,8 +125,9 @@ public class IgniteSinker extends RichSinkFunction<Event> {
      */
     @Override
     public void open(Configuration parameter) {
-
         A.notNull(igniteCfgFile, "Ignite config file");
+        A.notNull(cacheName, "Cache name");
+
         try {
             // if an ignite instance is already started in same JVM then use it.
             this.ignite = Ignition.ignite();
@@ -150,11 +151,18 @@ public class IgniteSinker extends RichSinkFunction<Event> {
             obj.setDiscoverySpi(spi);
             this.ignite = Ignition.getOrStart(obj);
         }
-        // 初始化多个stream
-        initStream();
+
+        this.ignite.getOrCreateCache(cacheName);
+
         this.log = this.ignite.log();
+
+        this.streamer = this.ignite.dataStreamer(cacheName);
+        this.streamer.autoFlushFrequency(autoFlushFrequency);
+        this.streamer.allowOverwrite(allowOverwrite);
+
         stopped = false;
     }
+
     /**
      * Stops streamer.
      *
@@ -166,10 +174,8 @@ public class IgniteSinker extends RichSinkFunction<Event> {
             return;
 
         stopped = true;
-        // close 掉其它stream
-        for(IgniteDataStreamer streamer: load.values()) {
-            streamer.close();
-        }
+
+        this.streamer.close();
     }
 
     /**
@@ -180,35 +186,15 @@ public class IgniteSinker extends RichSinkFunction<Event> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void invoke(Event in) {
+    public void invoke(IN in) {
         try {
-//            if (!(in instanceof Map))
-//                throw new IgniteException("Map as a streamer input is expected!");
-            // 写入不同的stream实现
-            String cacheName = in.getCacheName();
-            IgniteDataStreamer streamer = load.get(cacheName);
-            Map<String, Event> map = new HashMap<>();
-            map.put(in.getKey(), in);
-            streamer.addData(map);
-//            this.streamer.addData((Map)in);
+            if (!(in instanceof Map))
+                throw new IgniteException("Map as a streamer input is expected!");
+
+            this.streamer.addData((Map)in);
         }
         catch (Exception e) {
-            log.error("Error while processing IN of " , e);
-        }
-    }
-
-
-    // 初始化几个缓存
-    public void initStream() {
-        load = new HashMap<>();
-
-        List<String> list = new ArrayList<String>(Arrays.asList("LoginCache","ScanCache", "WindowCache"));
-        for(String value:list) {
-            this.ignite.getOrCreateCache(value);
-            IgniteDataStreamer LoginCacheStream = this.ignite.dataStreamer(value);
-            LoginCacheStream.autoFlushFrequency(autoFlushFrequency);
-            LoginCacheStream.allowOverwrite(allowOverwrite);
-            load.put(value, LoginCacheStream);
+            log.error("Error while processing IN of " + cacheName, e);
         }
     }
 }
