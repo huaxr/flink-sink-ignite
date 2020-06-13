@@ -4,17 +4,20 @@ package org.apache.flink_sink.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginEvent implements Event{
+    @JsonProperty("type")
     private String type;
-//    private String cacheName; // 写入指定的缓存
-
     @JsonProperty("source_ip")
     private String sourceIp;
+    @JsonProperty("target_ip")
     private String targetIp;
+    @JsonProperty("source_port")
     private int sourcePort;
+    @JsonProperty("target_ip")
     private int targetPort;
+    @JsonProperty("alarm_type")
     private String alarmType;
+    @JsonProperty("alarm_detail")
     private String alarmDetail;
-    private int threatIndex; // 威胁指数
 
     @Override
     public String getCacheName() {
@@ -78,14 +81,6 @@ public class LoginEvent implements Event{
         this.alarmDetail = alarmDetail;
     }
 
-    public int getThreatIndex() {
-        return threatIndex;
-    }
-
-    public void setThreatIndex(int threatIndex) {
-        this.threatIndex = threatIndex;
-    }
-
     public String getType() {
         return type;
     }
@@ -104,7 +99,6 @@ public class LoginEvent implements Event{
                 ", targetPort=" + targetPort +
                 ", alarmType='" + alarmType + '\'' +
                 ", alarmDetail='" + alarmDetail + '\'' +
-                ", threatIndex=" + threatIndex +
                 '}';
     }
 }

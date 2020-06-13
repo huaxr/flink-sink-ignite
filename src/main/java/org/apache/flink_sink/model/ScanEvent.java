@@ -3,9 +3,7 @@ package org.apache.flink_sink.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ScanEvent implements Event{
-
     private String type;
-//    private String cacheName; // 写入指定的缓存
 
     @JsonProperty("source_ip")
     private String sourceIp;
