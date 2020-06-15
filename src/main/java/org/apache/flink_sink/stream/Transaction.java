@@ -3,14 +3,13 @@ package org.apache.flink_sink.stream;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.codemodel.internal.JCase;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 import org.apache.flink_sink.model.Event;
-import org.apache.flink_sink.model.LoginEvent;
+import org.apache.flink_sink.model.AuthEvent;
 import org.apache.flink_sink.model.ScanEvent;
 import org.apache.flink_sink.model.WindowEvent;
 import org.slf4j.Logger;
@@ -58,21 +57,22 @@ public class Transaction {
             try {
                 mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 Map<String, Object> data = mapper.readValue(value, new TypeReference<Map<String, Object>>(){});
-                String alarmType = data.getOrDefault("type", "").toString();
+                String alarmType = data.getOrDefault("data_type", "").toString();
 
                 Event raw = null;
 
-                if (alarmType.equals("login")) {
-                    raw = mapper.readValue(value, LoginEvent.class);
+                if (alarmType.equals("TAG-AUTH")) {
+                    raw = mapper.readValue(value, AuthEvent.class);
                 }
                 else if (alarmType.equals("scan")) {
                     raw = mapper.readValue(value, ScanEvent.class);
                 }
-
                 else if (alarmType.equals("window")) {
                     raw = mapper.readValue(value, WindowEvent.class);
                 }
-
+                else {
+                    System.out.println("该类型暂时没有相关实现:" + alarmType);
+                }
                 String cache = raw.getCacheName();
                 System.out.println("获取type:"+ alarmType);
                 System.out.println("获取cache:"+ cache);

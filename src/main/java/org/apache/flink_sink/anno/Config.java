@@ -7,10 +7,9 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Config {
-    String BmqClusterName = "kafka_system_security_lf";
-    String BmqConsumerGroup = "hxr_test";
-    String BmqSourceTopic = "event_queue";
-    String BmqSinkTopic = "event_queue";
+    String BmqClusterName = "bmq_security_riskctrl";
+    String BmqConsumerGroup = "flink_source_consumer_hxr";
+    String BmqSourceTopic = "bytesecurity_ignite";
     String PSM = "security.center.flink_tran_sink";
     String Team = "security_team";
     String Owner = "security_hua";

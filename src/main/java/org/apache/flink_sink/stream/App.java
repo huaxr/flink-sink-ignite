@@ -10,8 +10,6 @@ import java.util.Objects;
 
 public class App extends Stream{
 	public static void main(String[] args) {
-
-
 		StreamExecutionEnvironment env = getEnv();
 		DataStream<String> appStream = getStream();
 

@@ -92,6 +92,7 @@ public class IgniteSinker extends RichSinkFunction<Event> {
             IgniteDataStreamer streamer = load.get(cacheName);
             Map<String, Event> map = new HashMap<>();
             map.put(in.getKey(), in);
+            System.out.println(in);
             streamer.addData(map);
         }
         catch (Exception e) {
@@ -101,7 +102,7 @@ public class IgniteSinker extends RichSinkFunction<Event> {
     // 初始化几个缓存
     public void initStream() {
         load = new HashMap<>();
-        List<String> list = new ArrayList<String>(Arrays.asList("LoginCache","ScanCache", "WindowCache"));
+        List<String> list = new ArrayList<String>(Arrays.asList("AuthCache","ScanCache", "WindowCache"));
         for(String value:list) {
             this.ignite.getOrCreateCache(value);
             IgniteDataStreamer LoginCacheStream = this.ignite.dataStreamer(value);
